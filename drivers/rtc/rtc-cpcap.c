@@ -270,13 +270,13 @@ static int cpcap_rtc_probe(struct platform_device *pdev)
 	rtc->alarm_irq = platform_get_irq(pdev, 0);
 	err = devm_request_threaded_irq(dev, rtc->alarm_irq, NULL,
 					cpcap_rtc_alarm_irq,
-					IRQF_TRIGGER_NONE | IRQF_ONESHOT,
+					IRQF_TRIGGER_NONE | IRQF_ONESHOT |
+					IRQF_NO_AUTOEN,
 					"rtc_alarm", rtc);
 	if (err) {
 		dev_err(dev, "Could not request alarm irq: %d\n", err);
 		return err;
 	}
-	disable_irq(rtc->alarm_irq);
 
 	/* Stock Android uses the 1 Hz interrupt for "secure clock daemon",
 	 * which is not supported by the mainline kernel. The mainline kernel
