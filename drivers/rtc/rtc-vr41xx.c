@@ -312,8 +312,8 @@ static int rtc_probe(struct platform_device *pdev)
 		goto err_iounmap_all;
 	}
 
-	retval = devm_request_irq(&pdev->dev, aie_irq, elapsedtime_interrupt, 0,
-				"elapsed_time", pdev);
+	retval = devm_request_irq(&pdev->dev, aie_irq, elapsedtime_interrupt,
+				  IRQF_NO_AUTOEN, "elapsed_time", pdev);
 	if (retval < 0)
 		goto err_iounmap_all;
 
@@ -323,15 +323,12 @@ static int rtc_probe(struct platform_device *pdev)
 		goto err_iounmap_all;
 	}
 
-	retval = devm_request_irq(&pdev->dev, pie_irq, rtclong1_interrupt, 0,
-				"rtclong1", pdev);
+	retval = devm_request_irq(&pdev->dev, pie_irq, rtclong1_interrupt,
+				  IRQF_NO_AUTOEN, "rtclong1", pdev);
 	if (retval < 0)
 		goto err_iounmap_all;
 
 	platform_set_drvdata(pdev, rtc);
-
-	disable_irq(aie_irq);
-	disable_irq(pie_irq);
 
 	dev_info(&pdev->dev, "Real Time Clock of NEC VR4100 series\n");
 
